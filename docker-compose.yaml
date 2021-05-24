@@ -1,0 +1,51 @@
+version: "2"
+
+networks:
+    zeebe_network:
+        driver: bridge
+
+services:
+    zeebe:
+        container_name: zeebe_broker
+        image: camunda/zeebe:0.26.2
+        environment:
+            - ZEEBE_LOG_LEVEL=info
+        ports:
+            - "26500:26500"
+            - "9600:9600"
+            - "5701:5701"
+        volumes:
+            - ./zeebe-hazelcast-exporter-0.10.0.jar:/usr/local/zeebe/exporters/zeebe-hazelcast-exporter-0.10.0.jar
+            - ./application.yaml:/usr/local/zeebe/config/application.yaml
+        networks:
+            - zeebe_network
+    monitor:
+        container_name: zeebe_monitor
+        image: camunda/zeebe-simple-monitor:1.0.0
+        environment:
+            - zeebe.client.broker.contactPoint=zeebe:26500
+            - zeebe.client.worker.hazelcast.connection=zeebe:5701
+        volumes:
+            - ./simple-monitor-application.yaml:/application.yaml
+        ports:
+            - 8082:8082
+        depends_on:
+            - zeebe
+        networks:
+            - zeebe_network
+    zeebe-runner:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: nima/zeebe-runner
+        container_name: zeebe-runner
+        ports:
+            - 5555:5555
+        working_dir: /opt/working
+        volumes:
+            - .:/opt/working
+        entrypoint: python api.py
+        depends_on:
+            - zeebe
+        networks:
+            - zeebe_network
