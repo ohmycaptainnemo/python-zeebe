@@ -2,3 +2,4 @@ pyzeebe
 pytest
 uvicorn
 fastapi
+python-multipart

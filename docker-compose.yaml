@@ -28,7 +28,7 @@ services:
         volumes:
             - ./simple-monitor-application.yaml:/application.yaml
         ports:
-            - 8082:8082
+            - "8082:8082"
         depends_on:
             - zeebe
         networks:
@@ -40,7 +40,7 @@ services:
         image: nima/zeebe-runner
         container_name: zeebe-runner
         ports:
-            - 5555:5555
+            - "5555:5555"
         working_dir: /opt/working
         volumes:
             - .:/opt/working
