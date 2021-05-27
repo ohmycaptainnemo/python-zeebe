@@ -1,20 +1,30 @@
 from fastapi import FastAPI, File, UploadFile
 from pyzeebe import ZeebeClient
-import uvicorn
-import os
 import json
 import logging
+import os
+import uvicorn
+from typing import Dict
 
 from src.settings import Zeebe
+from src.tasks import worker
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
 logger = logging.getLogger()
 
 if __name__ == "__main__":
 
+    logger.info("Starting client")
     client = ZeebeClient(hostname = Zeebe.ZEEBE_HOSTNAME, port = Zeebe.ZEEBE_PORT, max_connection_retries = Zeebe.ZEEBE_MAX_CONNECTION_RETRIES)
 
-    app = FastAPI(docs_url="/")
+    logger.info("Starting worker")
+    worker.work(True)
+
+    app = FastAPI(
+        title ="Zeebe sandbox",
+        description = "An API to allow experimenting with workflows and demonstrating Zeebe functionality.",
+        docs_url ="/"
+        )
 
     with open("VERSION", "r") as f:
         VERSION = f.read()
@@ -48,10 +58,10 @@ if __name__ == "__main__":
             logger.error(error_response_dict)
             return(error_response_dict)
 
-    @app.get("/run")
-    def run_instance(bpmn_process_id: str):
+    @app.post("/run")
+    def run_instance(bpmn_process_id: str, variables: Dict = {"collectedItems": 0, "numberOfItems": 3, "data": {"payload":"123", "orderId": "1"}, "aggregateList": []}):
         try:
-            workflow_instance_key = client.run_workflow(bpmn_process_id= bpmn_process_id, variables={"orderId": "1"})
+            workflow_instance_key = client.run_workflow(bpmn_process_id = bpmn_process_id, variables = variables)
             success_msg = f'Instance now running with workflow instance key: {workflow_instance_key}' 
             logger.info(success_msg)
             return (success_msg) 
@@ -64,10 +74,10 @@ if __name__ == "__main__":
             logger.error(error_response_dict)
             return(error_response_dict)
 
-    @app.get("/publish")
-    def publish_message():
+    @app.post("/publish")
+    def publish_message(messag_name: str, correlation_key: str, variables: Dict[str, str] = {}):
         try:
-            client.publish_message(name = "mymsg", correlation_key = "1", variables = {"test": "Hello"})
+            client.publish_message(name = messag_name, correlation_key = correlation_key, variables = variables)
             success_msg = "Message was published successfully!" 
             logger.info(success_msg)
             return (success_msg) 
