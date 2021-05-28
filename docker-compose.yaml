@@ -45,6 +45,8 @@ services:
         volumes:
             - .:/opt/working
         entrypoint: python api.py
+        environment:
+            - API_PORT=5555
         depends_on:
             - zeebe
         networks:
