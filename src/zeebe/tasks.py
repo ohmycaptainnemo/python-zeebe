@@ -1,5 +1,6 @@
 import logging
 from typing import Dict, List, Optional
+
 from pyzeebe import ZeebeWorker
 
 from .settings import Zeebe
@@ -7,9 +8,7 @@ from .settings import Zeebe
 logger = logging.getLogger()
 
 worker = ZeebeWorker(
-    hostname=Zeebe.ZEEBE_HOSTNAME,
-    port=Zeebe.ZEEBE_PORT,
-    max_connection_retries=Zeebe.ZEEBE_MAX_CONNECTION_RETRIES,
+    hostname=Zeebe.ZEEBE_HOSTNAME, port=Zeebe.ZEEBE_PORT, max_connection_retries=Zeebe.ZEEBE_MAX_CONNECTION_RETRIES,
 )
 
 
@@ -32,9 +31,7 @@ def package_items(collectedItems: int, data: str, aggregateList: List) -> Option
 
 
 @worker.task(task_type="package-item", **Zeebe.TASK_DEFAULT_PARAMS)
-def package_item(
-    errorHandlerTest: bool, failureHandlerTest: bool, data: str, aggregateList: List
-) -> Optional[Dict]:
+def package_item(errorHandlerTest: bool, failureHandlerTest: bool, data: str, aggregateList: List) -> Optional[Dict]:
     """Package item task definition.
 
     Args:

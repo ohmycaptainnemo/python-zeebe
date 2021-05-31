@@ -1,11 +1,11 @@
-from fastapi import APIRouter
 import json
 import logging
+
+from fastapi import APIRouter
 from google.protobuf.json_format import MessageToDict
 from zeebe_grpc.gateway_pb2 import TopologyRequest
 
 from ..zeebe.tasks import worker
-
 
 logger = logging.getLogger()
 
@@ -15,9 +15,7 @@ router = APIRouter()
 @router.get("/version")
 async def version():
     try:
-        return {
-            "zeebe": {"broker": MessageToDict(worker.zeebe_adapter._gateway_stub.Topology(TopologyRequest()))}
-        }
+        return {"zeebe": {"broker": MessageToDict(worker.zeebe_adapter._gateway_stub.Topology(TopologyRequest()))}}
 
     except Exception as e:
         error_response_dict = {

@@ -1,12 +1,12 @@
-from fastapi import UploadFile
-from pyzeebe import ZeebeClient
-from typing import Dict
 import json
 import logging
 import os
+from typing import Dict
+
+from fastapi import UploadFile
+from pyzeebe import ZeebeClient
 
 from ..zeebe.settings import Zeebe
-
 
 logger = logging.getLogger()
 
@@ -27,7 +27,7 @@ def deploy_workflow_module(client: ZeebeClient, bpmn_file: UploadFile) -> str:
         with open(bpmn_file_path, "wb+") as file_obj:
             file_obj.write(bpmn_file.file.read())
         logger.info(f"Finished saving .bpmn file. File is at {bpmn_file_path}")
-    except IOError as e:
+    except IOError:
         logger.error("Could not open or write to the .bpmn file!")
 
     try:
@@ -71,9 +71,7 @@ def run_instance_module(client: ZeebeClient, bpmn_process_id: str, variables: Di
         return error_response_dict
 
 
-def publish_message_module(
-    client: ZeebeClient, messag_name: str, correlation_key: str, variables: Dict
-) -> str:
+def publish_message_module(client: ZeebeClient, messag_name: str, correlation_key: str, variables: Dict) -> str:
     """Function for publishing message.
 
     Args:

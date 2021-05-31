@@ -1,12 +1,12 @@
-from fastapi import APIRouter, File, UploadFile
 import logging
-from pyzeebe import ZeebeClient
 from typing import Dict
 
-from ..zeebe.modules import deploy_workflow_module, run_instance_module, publish_message_module
-from ..zeebe.tasks import worker
-from ..zeebe.settings import Zeebe
+from fastapi import APIRouter, File, UploadFile
+from pyzeebe import ZeebeClient
 
+from ..zeebe.modules import deploy_workflow_module, publish_message_module, run_instance_module
+from ..zeebe.settings import Zeebe
+from ..zeebe.tasks import worker
 
 logger = logging.getLogger()
 
@@ -15,9 +15,7 @@ router = APIRouter()
 
 logger.info("Starting client")
 client = ZeebeClient(
-    hostname=Zeebe.ZEEBE_HOSTNAME,
-    port=Zeebe.ZEEBE_PORT,
-    max_connection_retries=Zeebe.ZEEBE_MAX_CONNECTION_RETRIES,
+    hostname=Zeebe.ZEEBE_HOSTNAME, port=Zeebe.ZEEBE_PORT, max_connection_retries=Zeebe.ZEEBE_MAX_CONNECTION_RETRIES,
 )
 
 logger.info("Starting worker")
@@ -51,13 +49,13 @@ async def run_instance(
     Args:
         bpmn_process_id (str): .bpmn process id.
 
-        variables (Dict, optional): The default payload. 
-        Defaults to { "collectedItems": 0, 
-        "numberOfItems": 3, 
-        "data": {"payload": "123", "orderId": "1"}, 
-        "aggregateList": [], 
+        variables (Dict, optional): The default payload.
+        Defaults to { "collectedItems": 0,
+        "numberOfItems": 3,
+        "data": {"payload": "123", "orderId": "1"},
+        "aggregateList": [],
         "messageTimeout": "PT10S",
-        "failureHandlerTest": False, 
+        "failureHandlerTest": False,
         "errorHandlerTest": False
         }.
     """

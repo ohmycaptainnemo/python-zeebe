@@ -1,8 +1,7 @@
-from pathlib import Path
 import os
+from pathlib import Path
 
 from .utils import error_handler, log_decorator
-
 
 PORT = int(os.environ.get("API_PORT", "5555"))
 

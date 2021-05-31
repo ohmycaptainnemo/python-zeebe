@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 
-
 from .heartbeat_router import router as heartbeat
 from .zeebe_router import router as zeebe
 
