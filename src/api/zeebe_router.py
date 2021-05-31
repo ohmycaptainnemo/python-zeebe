@@ -15,7 +15,9 @@ router = APIRouter()
 
 logger.info("Starting client")
 client = ZeebeClient(
-    hostname=Zeebe.ZEEBE_HOSTNAME, port=Zeebe.ZEEBE_PORT, max_connection_retries=Zeebe.ZEEBE_MAX_CONNECTION_RETRIES,
+    hostname=Zeebe.ZEEBE_HOSTNAME,
+    port=Zeebe.ZEEBE_PORT,
+    max_connection_retries=Zeebe.ZEEBE_MAX_CONNECTION_RETRIES,
 )
 
 logger.info("Starting worker")
@@ -63,12 +65,12 @@ async def run_instance(
 
 
 @router.post("/publish", description="Publish message")
-async def publish_message(messag_name: str, correlation_key: str, variables: Dict = {}):
+async def publish_message(message_name: str, correlation_key: str, variables: Dict = {}):
     """Endpoint for publishing messages.
 
     Args:
-        messag_name (str): The name of the message.
+        message_name (str): The name of the message.
         correlation_key (str): The correlation key.
         variables (Dict, optional): The payload of the message. Defaults to {}.
     """
-    return publish_message_module(client, correlation_key, variables)
+    return publish_message_module(client, message_name, correlation_key, variables)

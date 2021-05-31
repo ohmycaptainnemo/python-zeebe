@@ -47,6 +47,8 @@ services:
         entrypoint: python api.py
         environment:
             - API_PORT=5555
+            - PYTHONDONTWRITEBYTECODE=1
+            - PYTHONIOENCODING=utf8
         depends_on:
             - zeebe
         networks:
