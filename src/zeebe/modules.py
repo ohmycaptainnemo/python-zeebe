@@ -8,11 +8,19 @@ import os
 from ..zeebe.settings import Zeebe
 
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
 logger = logging.getLogger()
 
 
 def deploy_workflow_module(client: ZeebeClient, bpmn_file: UploadFile) -> str:
+    """Function for deploying workflow from .bpmn file.
+
+    Args:
+        client (ZeebeClient): Zeebe client.
+        bpmn_file (UploadFile): The uploaded .bpmn file.
+
+    Returns:
+        str: Success or error message.
+    """
     bpmn_file_path = os.path.join(Zeebe.BPMN_DUMP_PATH, bpmn_file.filename)
     try:
         logger.info("Started saving .bpmn file.")
@@ -38,6 +46,16 @@ def deploy_workflow_module(client: ZeebeClient, bpmn_file: UploadFile) -> str:
 
 
 def run_instance_module(client: ZeebeClient, bpmn_process_id: str, variables: Dict) -> str:
+    """Running a Zeebe instance.
+
+    Args:
+        client (ZeebeClient): Zeebe client
+        bpmn_process_id (str): .bpmn file process id. Can be found in the .bpmn file.
+        variables (Dict): Variables to start the instance with.
+
+    Returns:
+        str: Success or error message.
+    """
     try:
         workflow_instance_key = client.run_workflow(bpmn_process_id=bpmn_process_id, variables=variables)
         success_msg = f"Instance now running with workflow instance key: {workflow_instance_key}"
@@ -56,6 +74,17 @@ def run_instance_module(client: ZeebeClient, bpmn_process_id: str, variables: Di
 def publish_message_module(
     client: ZeebeClient, messag_name: str, correlation_key: str, variables: Dict
 ) -> str:
+    """Function for publishing message.
+
+    Args:
+        client (ZeebeClient): Zeebe client.
+        messag_name (str): The name of the message.
+        correlation_key (str): The chosen correlation_key.
+        variables (Dict): Variables to publish with the message.
+
+    Returns:
+        str: Success or error message.
+    """
     try:
         client.publish_message(name=messag_name, correlation_key=correlation_key, variables=variables)
         success_msg = "Message was published successfully!"
