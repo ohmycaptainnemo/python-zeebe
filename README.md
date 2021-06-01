@@ -17,14 +17,14 @@ A FastAPI python sandbox for Zeebe to deploy workflows, run instances and publis
 
 ## Main Features
 
-- Deploy Zeebe workflows from .bpmn files.
-- Run workflow instances.
-- Publish messages.
+- Deploy Zeebe workflows from .bpmn files. 💖
+- Run workflow instances. ⚡
+- Publish messages. 🔥
 - Displaying features in Zeebe such as:
-  - Message aggregation.
-  - Dynamic timers using expression language.
-  - Distinction between "errors" and "failures" in Zeebe workflows and how to handle them in task exception handlers.
-- Integration with FastAPI.
+  - Message aggregation. 🌞
+  - Dynamic timers using expression language. 🍀
+  - Distinction between "errors" and "failures" in Zeebe workflows and how to handle them in task exception handlers. 🐋
+- Integration with FastAPI. 💪
 
 ## Usage
 
